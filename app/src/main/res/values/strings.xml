@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BCCI</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_camera">Camera</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="img_splash">img_splash</string>
+    <string name="test_splash">Business Card Contact Importer</string>
+    <string name="textview">TextView</string>
+    <string name="run_ocr">Run OCR</string>
+    <string name="image">image</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="add_to_contacts">Add to Contacts</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+</resources>

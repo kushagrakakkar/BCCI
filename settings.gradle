@@ -1,0 +1,4 @@
+include ':app', ':tess-two-test', ':tess-two', ':eyes-two'
+project(':tess-two-test').projectDir = new File('app/libs/tess-two-master/tess-two-test')
+project(':tess-two').projectDir = new File('app/libs/tess-two-master/tess-two')
+project(':eyes-two').projectDir = new File('app/libs/tess-two-master/eyes-two')
