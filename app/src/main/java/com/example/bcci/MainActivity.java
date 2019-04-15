@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.googlecode.tesseract.android.TessBaseAPI;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,14 +33,15 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     final int img = 1;
+    final int PIC_CROP=2;
     private ImageView imgView;
     String path;
     private TessBaseAPI mTess;
     TextView displayName, displayPhone, displayEmail;
     String datapath = "";
     Bitmap bitmap;
-    Bitmap bitmapmain;
     File image;
+    Uri photoURI;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -69,9 +68,10 @@ public class MainActivity extends AppCompatActivity {
             File photoFile;
                 photoFile = createFile();
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.example.bcci.fileprovider", photoFile);
-                 takePic.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                photoURI = FileProvider.getUriForFile(this, "com.example.bcci.fileprovider", photoFile);
+                takePic.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePic, img);
+
 
             }
         }
@@ -79,9 +79,6 @@ public class MainActivity extends AppCompatActivity {
     public void setPic() throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         InputStream is;
-//        is = new FileInputStream(path);
-//        BitmapFactory.decodeStream(is, null, options);
-//        is.close();
         is = new FileInputStream(path);
         int w = imgView.getMaxWidth();
         int h = imgView.getMaxHeight();
@@ -98,15 +95,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void cropImage(Uri photoURI) {
+
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            // indicate image type and Uri
+            cropIntent.setDataAndType(photoURI, "File");
+            // set crop properties here
+            cropIntent.putExtra("crop", true);
+            // indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            // indicate output X and Y
+            cropIntent.putExtra("outputX", 128);
+            cropIntent.putExtra("outputY", 128);
+            // retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            // start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode==img) {
-                  try {
-                    setPic();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (resultCode == RESULT_OK ) {
+                  if(requestCode==img){
+                      try {
+                          setPic();
+                      } catch (IOException e) {
+                          e.printStackTrace();
+                      }
+                  }
+
+        }
 
         }
     private void checkFile(File dir) {
@@ -149,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
     public void processImage(){
 
         String OCRresult = null;
-        mTess.setImage(image);
+        mTess.setImage(bitmap);
         OCRresult = mTess.getUTF8Text();
         extractName(OCRresult);
         extractEmail(OCRresult);
