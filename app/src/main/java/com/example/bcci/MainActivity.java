@@ -98,19 +98,13 @@ public class MainActivity extends AppCompatActivity {
     public void cropImage(Uri photoURI) {
 
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            // indicate image type and Uri
             cropIntent.setDataAndType(photoURI, "File");
-            // set crop properties here
             cropIntent.putExtra("crop", true);
-            // indicate aspect of desired crop
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
-            // indicate output X and Y
             cropIntent.putExtra("outputX", 128);
             cropIntent.putExtra("outputY", 128);
-            // retrieve data on return
             cropIntent.putExtra("return-data", true);
-            // start the activity - we handle returning in onActivityResult
             startActivityForResult(cropIntent, PIC_CROP);
     }
 
